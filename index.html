@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Notification Demo</title>
+</head>
+
+<body>
+    <button id="enable">Enable notifications</button>
+    <div id="status"></div>
+    <script>
+        document.getElementById(`enable`).addEventListener(`click`, function () {
+            Notification.requestPermission().then(function (permission) {
+                if (permission == `granted`) {
+                    notification = new Notification(`Test.`)
+                    notification.addEventListener(`error`, function () {
+                        document.getElementById(`status`).textContent = `Error in notification`
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
