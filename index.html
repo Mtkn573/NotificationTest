@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Notification Demo</title>
+    <title>Notification with Service Worker</title>
 </head>
-
 <body>
-    <button id="enable">Enable notifications</button>
+    <button id="enable">Enable Notifications</button>
     <div id="status"></div>
     <script>
-        document.getElementById(`enable`).addEventListener(`click`, function () {
-            Notification.requestPermission().then(function (permission) {
-                if (permission == `granted`) {
-                    notification = new Notification(`Test.`)
-                    notification.addEventListener(`error`, function () {
-                        document.getElementById(`status`).textContent = `Error in notification`
-                    })
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('Service Worker registered', reg);
+            }).catch(err => {
+                console.error('Service Worker registration failed:', err);
+            });
+        }
+
+        // Ask for permission and send message to SW
+        document.getElementById('enable').addEventListener('click', () => {
+            Notification.requestPermission().then(permission => {
+                document.getElementById('status').textContent = 'Permission: ' + permission;
+                if (permission === 'granted') {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.active.postMessage('show-notification');
+                    });
                 }
-            })
-        })
+            });
+        });
     </script>
 </body>
-
 </html>
