@@ -20,7 +20,7 @@
                 let currentTime = new Date();
                 let hours = currentTime.getHours();
                 let minutes = currentTime.getMinutes();
-                if (hours == Number(19) && minutes == Number(25)) {
+                if (hours == Number(19) && minutes == Number(45)) {
                     Notification.requestPermission().then(function (permission) {
                         if (permission == `granted`) {
                             navigator.serviceWorker.ready.then(function (registration) {
@@ -33,7 +33,7 @@
                     })
                 }
             }, 60 * 1000)//Call every minute.
-            document.getElementById(`output`).innerHTML = `Notification should show.`;
+            document.getElementById(`output`).innerHTML = `Notification should show2.`;
         })
     </script>
 </body>
