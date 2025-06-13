@@ -15,16 +15,23 @@
             })
         }
         document.getElementById(`enable`).addEventListener(`click`, function () {
-            Notification.requestPermission().then(function (permission) {
-                if (permission == `granted`) {
-                    navigator.serviceWorker.ready.then(function (registration) {
-                        registration.active.postMessage({
-                            type: `showNotification`,
-                            body: `Test.`
-                        })
+            setInterval(function () {
+                let currentTime = new Date();
+                let hours = currentTime.getHours();
+                let minutes = currentTime.getMinutes();
+                if (hours == Number(19) && minutes == Number(5)) {
+                    Notification.requestPermission().then(function (permission) {
+                        if (permission == `granted`) {
+                            navigator.serviceWorker.ready.then(function (registration) {
+                                registration.active.postMessage({
+                                    type: `showNotification`,
+                                    body: `Test.`
+                                })
+                            })
+                        }
                     })
                 }
-            })
+            }, 60 * 1000)//Call every minute.
         })
     </script>
 </body>
