@@ -8,7 +8,7 @@
 <body>
     <button id="enable">Enable Notifications</button>
     <div id="output"></div>
-    <input type=`time`>
+    <input id="reminderTime" type="time">
     <script>
         if (`serviceWorker` in navigator) {
             navigator.serviceWorker.register(`serviceWorker.js`).then(function (registration) {
@@ -22,7 +22,24 @@
             let hours = currentTime.getHours();
             let minutes = currentTime.getMinutes();
             if (hours == Number(16) && minutes == Number(13)) {*/
-            Notification.requestPermission().then(function (permission) {
+            setInterval(function () {
+                let currentTime = new Date();
+                let hours = currentTime.getHours();
+                let minutes = currentTime.getMinutes();
+                if (hours == Number(document.getElementById("reminderTime").value.substring(0, 2)) && minutes == Number(document.getElementById("reminderTime").value.substring(3, 5))) {
+                    Notification.requestPermission().then(function (permission) {
+                        if (permission == `granted`) {
+                            navigator.serviceWorker.ready.then(function (registration) {
+                                registration.active.postMessage({
+                                    type: `showNotification`,
+                                    body: `$(document.getElementById("reminderTime").value)`
+                                })
+                            })
+                        }
+                    })
+                }
+            }, 60 * 1000)//Call every minute.
+            /*Notification.requestPermission().then(function (permission) {
                 if (permission == `granted`) {
                     navigator.serviceWorker.ready.then(function (registration) {
                         registration.active.postMessage({
@@ -31,7 +48,7 @@
                         })
                     })
                 }
-            })
+            })*/
             //}
             //}, 60 * 1000)//Call every minute.
             //document.getElementById(`output`).innerHTML = `Notification should show2.`;
