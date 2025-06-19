@@ -32,7 +32,7 @@
                             navigator.serviceWorker.ready.then(function (registration) {
                                 registration.active.postMessage({
                                     type: `showNotification`,
-                                    body: `$(document.getElementById("reminderTime").value)`
+                                    body: `${document.getElementById("reminderTime").value}`
                                 })
                             })
                         }
