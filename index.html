@@ -1,44 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Notification with Service Worker</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications Example</title>
 </head>
 
 <body>
-    <button id="enable">Enable Notifications</button>
-    <div id="output"></div>
-    <input id="reminderTime" type="time">
+    <button id="notifyButton">Show Notification</button>
     <script>
-        document.getElementById('enable').addEventListener('click', function () {
-            notification();
+        document.addEventListener("DOMContentLoaded", () => {
+            const notifyButton = document.getElementById("notifyButton");
+
+            notifyButton.addEventListener("click", () => {
+                showNotification("Hello!", {
+                    body: "This is a browser notification example."
+                });
+            });
         });
-        function notification() {
-            if (!window.Notification) {
-                confirm('Notification Not supported by this Broweser');
+
+        function showNotification(title, options) {
+            if (!("Notification" in window)) {
+                console.error("This browser does not support notifications.");
+                return;
             }
-            else {
-                if (Notification.permission == 'granted') {
-                    const notify = new Notification('Hi XYZ User!', {
-                        body: 'We have Something new for you?',
-                        icon: 'https://bit.ly/2DYqRrh'
-                    })
-                }
-                else {
-                    Notification.requestPermission().then((response) => {
-                        if (response == 'granted') {
-                            const notify = new Notification('Hi XYZ User!', {
-                                body: 'We have Something new for you?',
-                                icon: 'https://bit.ly/2DYqRrh'
-                            })
-                        }
-                        else {
-                            console.log("Notification Blocked by User");
-                        }
-                    }).catch(function (err) {
-                        console.error(err);
-                    })
-                }
+
+            if (Notification.permission === "granted") {
+                new Notification(title, options);
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        new Notification(title, options);
+                    }
+                });
             }
         }
     </script>
