@@ -10,49 +10,37 @@
     <div id="output"></div>
     <input id="reminderTime" type="time">
     <script>
-        if (`serviceWorker` in navigator) {
-            navigator.serviceWorker.register(`serviceWorker.js`).then(function (registration) {
-            }).catch(function (error) {
-                alert(`Service Worker registration failed:`, error)
-            })
-        }
-        document.getElementById(`enable`).addEventListener(`click`, function () {
-            //setInterval(function () {
-            /*let currentTime = new Date();
-            let hours = currentTime.getHours();
-            let minutes = currentTime.getMinutes();
-            if (hours == Number(16) && minutes == Number(13)) {*/
-            setInterval(function () {
-                let currentTime = new Date();
-                let hours = currentTime.getHours();
-                let minutes = currentTime.getMinutes();
-                if (hours == Number(document.getElementById("reminderTime").value.substring(0, 2)) && minutes == Number(document.getElementById("reminderTime").value.substring(3, 5))) {
-                    Notification.requestPermission().then(function (permission) {
-                        if (permission == `granted`) {
-                            navigator.serviceWorker.ready.then(function (registration) {
-                                registration.active.postMessage({
-                                    type: `showNotification`,
-                                    body: `${document.getElementById("reminderTime").value}`
-                                })
+        document.getElementById('enable').addEventListener('click', function () {
+            notification();
+        });
+        function notification() {
+            if (!window.Notification) {
+                confirm('Notification Not supported by this Broweser');
+            }
+            else {
+                if (Notification.permission == 'granted') {
+                    const notify = new Notification('Hi XYZ User!', {
+                        body: 'We have Something new for you?',
+                        icon: 'https://bit.ly/2DYqRrh'
+                    })
+                }
+                else {
+                    Notification.requestPermission().then((response) => {
+                        if (response == 'granted') {
+                            const notify = new Notification('Hi XYZ User!', {
+                                body: 'We have Something new for you?',
+                                icon: 'https://bit.ly/2DYqRrh'
                             })
                         }
+                        else {
+                            console.log("Notification Blocked by User");
+                        }
+                    }).catch(function (err) {
+                        console.error(err);
                     })
                 }
-            }, 60 * 1000)//Call every minute.
-            /*Notification.requestPermission().then(function (permission) {
-                if (permission == `granted`) {
-                    navigator.serviceWorker.ready.then(function (registration) {
-                        registration.active.postMessage({
-                            type: `showNotification`,
-                            body: `Test.`
-                        })
-                    })
-                }
-            })*/
-            //}
-            //}, 60 * 1000)//Call every minute.
-            //document.getElementById(`output`).innerHTML = `Notification should show2.`;
-        })
+            }
+        }
     </script>
 </body>
 
